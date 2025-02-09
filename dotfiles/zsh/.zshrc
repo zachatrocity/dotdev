@@ -92,3 +92,6 @@ if [ -n "$SSH_CONNECTION" ] && [ -z "$TMUX" ]; then
 fi
 export PATH="$HOME/.cargo/bin:$PATH"
 export HELIX_RUNTIME="/usr/local/lib/helix/runtime"
+export HELIX_RUNTIME="/usr/local/lib/helix/runtime"
+export HELIX_RUNTIME="/usr/local/lib/helix/runtime"
+export HELIX_RUNTIME="/usr/local/lib/helix/runtime"

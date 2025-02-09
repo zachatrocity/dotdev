@@ -1,46 +1,52 @@
-FROM ubuntu:22.04
-
-# Prevent interactive prompts during build
-ENV DEBIAN_FRONTEND=noninteractive
+FROM alpine:edge
 
 # Install essential packages and development tools
-RUN apt-get update && apt-get install -y \
-    build-essential \
+RUN apk add --no-cache \
+    # Base development tools
+    alpine-sdk \
+    bash \
     curl \
     git \
+    lazygit \
     mosh \
-    tmux \
-    openssh-server \
-    sudo \
+    neovim \
+    nodejs \
+    npm \
+    openssh \
     python3 \
-    python3-pip \
+    py3-pip \
     ripgrep \
-    fd-find \
-    pkg-config \
-    libssl-dev \
-    nnn \
+    fd \
+    sudo \
+    tmux \
     zsh \
-    && rm -rf /var/lib/apt/lists/*
+    # Build dependencies
+    fontconfig \
+    unzip \
+    # Additional tools
+    fzf \
+    nnn \
+    # Required for proper locale support
+    musl-locales \
+    # Required for proper font rendering
+    font-jetbrains-mono-nerd
 
-# Install and configure FZF
+# Setup SSH
+RUN ssh-keygen -A && \
+    mkdir -p /var/run/sshd
+
+# Install tmux plugin manager
+RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+# Install tree-sitter (required for neovim)
+RUN npm install -g tree-sitter-cli
+
+# Configure fzf
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
     ~/.fzf/install --all && \
     mkdir -p /usr/share/fzf && \
     cp ~/.fzf/shell/completion.zsh /usr/share/fzf/ && \
     cp ~/.fzf/shell/key-bindings.zsh /usr/share/fzf/
-
-# Install Rust and build helix editor
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
-RUN cargo install --git https://github.com/helix-editor/helix --locked helix-term && \
-    ln -s ~/.cargo/bin/hx /usr/local/bin/hx && \
-    ln -s ~/.cargo/bin/hx /usr/local/bin/helix && \
-    chmod 755 ~/.cargo/bin/hx && \
-    chmod 755 /usr/local/bin/hx && \
-    chmod 755 /usr/local/bin/helix 
-
-# Create SSH directory
-RUN mkdir /var/run/sshd
 
 # Script to create user and setup environment
 COPY entrypoint.sh /entrypoint.sh
