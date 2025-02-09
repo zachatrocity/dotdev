@@ -12,11 +12,8 @@ services:
     volumes:
       - ${WORKSPACE_DIR}:/home/${DEV_USER}/workspace
       - ${HOST_SSH_DIR:-~/.ssh}:/home/${DEV_USER}/.ssh:ro  # Read-only mount of host SSH directory
-      - ./dotfiles/tmux/.tmux.conf:/home/${DEV_USER}/.tmux.conf
-      - ./dotfiles/helix:/home/${DEV_USER}/.config/helix
       - ./dotfiles/nvim:/home/${DEV_USER}/.config/nvim
       - ./dotfiles/zsh/.zshrc:/home/${DEV_USER}/.zshrc
-      - ./dotfiles/fzf/.fzf.zsh:/home/${DEV_USER}/.fzf.zsh
     restart: unless-stopped
     security_opt:
       - seccomp:unconfined  # Needed for proper debugger support

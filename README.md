@@ -1,51 +1,68 @@
-# dotdev
+# Remote Development Environment
 
-A containerized development environment optimized for iPad SSH/Mosh access.
+Alpine-based containerized development environment optimized for iPad SSH/Mosh access.
 
 ## Features
-- Mosh for reliable mobile connections
-- Tmux for session management
-- Helix editor with LSP support
+
+- Mosh for reliable mobile connections and session persistence
+- LazyVim with tree-sitter and LSP support
+- FZF for fuzzy finding
 - nnn file manager
-- fzf for fuzzy finding
-- zsh with sensible defaults 
+- Zsh with vi mode
 
 ## Quick Start
 
-1. Create a `.env` file (see `.env.example`):
-```env
-DEV_USER=youruser
-DEV_PASSWORD=yourpassword
-SSH_PORT=2222
-MOSH_PORTS=62000-62100
-WORKSPACE_DIR=./workspace
-HOST_SSH_DIR=~/.ssh
-TZ=UTC
+1. Create `.env` file from example:
+```bash
+cp .env.example .env
 ```
 
-2. Start the container:
+Default configuration:
+- User: devuser (password: changeme)
+- SSH port: 2222
+- Mosh ports: 62000-62100 (UDP)
+- Workspace mounted from ./workspace
+- SSH keys from ~/.ssh
+
+2. Build and start:
 ```bash
 docker-compose up -d
 ```
 
 3. Connect:
 ```bash
-# SSH
-ssh -p 2222 youruser@localhost
+# SSH (first time, accept the host key)
+ssh -p 2222 devuser@localhost
 
-# Mosh
-mosh --ssh="ssh -p 2222" youruser@localhost
+# Or Mosh (recommended)
+mosh --ssh="ssh -p 2222" devuser@localhost
 ```
 
-## Customization
+## Development Testing
 
-Modify configurations in the `dotfiles/` directory:
-```
-dotfiles/
-├── tmux/.tmux.conf    # Tmux config
-├── helix/config.toml  # Helix editor config
-├── zsh/.zshrc         # Zsh shell config
-└── fzf/.fzf.zsh      # Fuzzy finder config
+For quick testing, comment out the sshd CMD in Dockerfile and use:
+```bash
+docker run -it --rm \
+  -e USERNAME=dev \
+  -e PASSWORD=dev \
+  -v $PWD/dotfiles:/home/dev/.dotfiles \
+  your-image-name
 ```
 
-Changes are reflected in the container through volume mounts. Your host's SSH keys and configurations are automatically available in the container.
+## Directory Structure
+```
+.
+├── Dockerfile           # Alpine-based image configuration
+├── docker-compose.yml   # Container orchestration
+├── entrypoint.sh       # User and environment setup
+└── dotfiles/
+    ├── nvim/           # LazyVim configuration
+    └── zsh/            # Zsh configuration
+```
+
+## Default Behavior
+
+On SSH/Mosh connection:
+- Automatically opens nvim in workspace directory
+- Session persistence through mosh
+- Full LazyVim IDE features

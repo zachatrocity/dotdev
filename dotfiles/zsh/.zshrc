@@ -35,15 +35,15 @@ zle -N zle-keymap-select
 alias ls='ls --color=auto'
 alias ll='ls -la'
 alias grep='grep --color=auto'
-alias hx='helix'
 
 # Environment variables
-export EDITOR='hx'
-export VISUAL='hx'
+export EDITOR='nvim'
+export VISUAL='nvim'
 export TERM=xterm-256color
 
 # FZF configuration
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
+[ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
 
 # Custom functions
 function mkcd() {
@@ -81,17 +81,10 @@ if [ -d ~/.zsh.d ]; then
     done
 fi
 
-# Cargo and Helix configuration
+# Cargo configuration
 export PATH="$HOME/.cargo/bin:$PATH"
-export HELIX_RUNTIME="/usr/local/lib/helix/runtime"
 
-# Auto-start tmux on SSH connection
-if [ -n "$SSH_CONNECTION" ] && [ -z "$TMUX" ]; then
-    # Attach to existing session or create a new one
-    tmux attach || tmux
+# Auto-start nvim in workspace when connecting via SSH
+if [ -n "$SSH_CONNECTION" ]; then
+    cd ~/workspace && nvim
 fi
-export PATH="$HOME/.cargo/bin:$PATH"
-export HELIX_RUNTIME="/usr/local/lib/helix/runtime"
-export HELIX_RUNTIME="/usr/local/lib/helix/runtime"
-export HELIX_RUNTIME="/usr/local/lib/helix/runtime"
-export HELIX_RUNTIME="/usr/local/lib/helix/runtime"

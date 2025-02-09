@@ -24,16 +24,6 @@ if [ ! -z "$USERNAME" ] && [ ! -z "$PASSWORD" ]; then
     touch "/home/$USERNAME/.zsh_history"
     chown "$USERNAME:$USERNAME" "/home/$USERNAME/.zsh_history"
     chmod 644 "/home/$USERNAME/.zsh_history"
-    
-    # Setup FZF for the user
-    mkdir -p "/home/$USERNAME/.fzf"
-    cp -r /root/.fzf/* "/home/$USERNAME/.fzf/"
-    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.fzf"
-
-    # Setup tmux plugin manager
-    mkdir -p "/home/$USERNAME/.tmux/plugins"
-    cp -r /root/.tmux/plugins/tpm "/home/$USERNAME/.tmux/plugins/"
-    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.tmux"
 
     # Configure sudo access for wheel group
     echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel

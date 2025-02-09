@@ -18,7 +18,6 @@ RUN apk add --no-cache \
     ripgrep \
     fd \
     sudo \
-    tmux \
     zsh \
     # Build dependencies
     fontconfig \
@@ -35,18 +34,8 @@ RUN apk add --no-cache \
 RUN ssh-keygen -A && \
     mkdir -p /var/run/sshd
 
-# Install tmux plugin manager
-RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
 # Install tree-sitter (required for neovim)
 RUN npm install -g tree-sitter-cli
-
-# Configure fzf
-RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
-    ~/.fzf/install --all && \
-    mkdir -p /usr/share/fzf && \
-    cp ~/.fzf/shell/completion.zsh /usr/share/fzf/ && \
-    cp ~/.fzf/shell/key-bindings.zsh /usr/share/fzf/
 
 # Script to create user and setup environment
 COPY entrypoint.sh /entrypoint.sh
