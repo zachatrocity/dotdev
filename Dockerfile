@@ -18,6 +18,7 @@ RUN apk add --no-cache \
     ripgrep \
     fd \
     sudo \
+    tmux \
     zsh \
     # Build dependencies
     fontconfig \
@@ -28,7 +29,17 @@ RUN apk add --no-cache \
     # Required for proper locale support
     musl-locales \
     # Required for proper font rendering
-    font-jetbrains-mono-nerd
+    font-jetbrains-mono-nerd \
+    # Required for Oh My Zsh
+    wget \
+    git
+
+# Install Antigen (ZSH Plugin Manager)
+RUN mkdir -p /usr/local/share/antigen && \
+    curl -L git.io/antigen > /usr/local/share/antigen/antigen.zsh
+
+# Install TPM (Tmux Plugin Manager)
+RUN git clone https://github.com/tmux-plugins/tpm /usr/local/share/tpm
 
 # Setup SSH
 RUN ssh-keygen -A && \

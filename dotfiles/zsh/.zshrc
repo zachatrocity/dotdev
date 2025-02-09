@@ -1,21 +1,38 @@
+# Source Antigen
+source /usr/local/share/antigen/antigen.zsh
+
+# Load Oh My Zsh
+antigen use oh-my-zsh
+
+# Load plugins
+antigen bundle git
+antigen bundle docker
+antigen bundle tmux
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-syntax-highlighting
+
+# Load theme
+antigen theme robbyrussell
+
+# Apply Antigen configuration
+antigen apply
+
 # History configuration
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory
 
-# Basic auto/tab completion
-autoload -U compinit
-zstyle ':completion:*' menu select
-zmodload zsh/complist
-compinit
-_comp_options+=(globdots) # Include hidden files
-
 # vi mode
 bindkey -v
 export KEYTIMEOUT=1
 
+# Initialize the completion system
+autoload -Uz compinit
+compinit
+
 # Use vim keys in tab complete menu
+zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
@@ -30,11 +47,6 @@ function zle-keymap-select {
     fi
 }
 zle -N zle-keymap-select
-
-# Useful aliases
-alias ls='ls --color=auto'
-alias ll='ls -la'
-alias grep='grep --color=auto'
 
 # Environment variables
 export EDITOR='nvim'
@@ -84,7 +96,12 @@ fi
 # Cargo configuration
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# Auto-start nvim in workspace when connecting via SSH
+# Auto-start tmux with neovim in workspace when connecting via SSH
 if [ -n "$SSH_CONNECTION" ]; then
-    cd ~/workspace && nvim
+    # If not already in tmux, start a new session
+    if [ -z "$TMUX" ]; then
+        cd ~/workspace
+        # Create a new tmux session named 'dev' and start neovim
+        tmux new-session -s dev 'nvim'
+    fi
 fi

@@ -15,10 +15,19 @@ if [ ! -z "$USERNAME" ] && [ ! -z "$PASSWORD" ]; then
     mkdir -p "/home/$USERNAME/.config/nnn"
     mkdir -p "/home/$USERNAME/.config/nvim"
     
+    # Install Oh My Zsh for the user
+    su - "$USERNAME" -c 'sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" "" --unattended'
+    
+    # Setup tmux plugin manager
+    mkdir -p "/home/$USERNAME/.tmux/plugins"
+    ln -s /usr/local/share/tpm "/home/$USERNAME/.tmux/plugins/tpm"
+    
     # Set ownership of config directories
     chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config"
     chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config/nnn"
     chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config/nvim"
+    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.oh-my-zsh"
+    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.tmux"
     
     # Setup zsh history file with proper permissions
     touch "/home/$USERNAME/.zsh_history"
