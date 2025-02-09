@@ -85,7 +85,7 @@ On SSH/Mosh connection:
 
 2. For AI features:
    - Set up your OpenRouter API key in environment variables
-   - Use `<leader>aa` to toggle AI assistant
+   - Use `<Space>aa` to toggle AI assistant (Space is the leader key)
    - Use `<C-s>` to submit prompts
    - Use `<Tab>` / `<S-Tab>` to accept/reject suggestions
 
