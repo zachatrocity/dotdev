@@ -10,24 +10,26 @@ if [ ! -z "$USERNAME" ] && [ ! -z "$PASSWORD" ]; then
     # Set ownership of home directory
     chown -R "$USERNAME:$USERNAME" "/home/$USERNAME"
 
-    # Create necessary config directories
+    # Create necessary directories
     mkdir -p "/home/$USERNAME/.config"
-    mkdir -p "/home/$USERNAME/.config/nnn"
-    mkdir -p "/home/$USERNAME/.config/nvim"
+    mkdir -p "/home/$USERNAME/.local/share"
+    mkdir -p "/home/$USERNAME/.local/state"
+    mkdir -p "/home/$USERNAME/.cache"
     
     # Install Oh My Zsh for the user
     su - "$USERNAME" -c 'sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" "" --unattended'
     
+    # Setup symlinks from dotfiles
+    ln -sf "/home/$USERNAME/dotfiles/nvim" "/home/$USERNAME/.config/nvim"
+    ln -sf "/home/$USERNAME/dotfiles/zsh/.zshrc" "/home/$USERNAME/.zshrc"
+    ln -sf "/home/$USERNAME/dotfiles/tmux/tmux.conf" "/home/$USERNAME/.tmux.conf"
+    
     # Setup tmux plugin manager
     mkdir -p "/home/$USERNAME/.tmux/plugins"
-    ln -s /usr/local/share/tpm "/home/$USERNAME/.tmux/plugins/tpm"
+    ln -sf /usr/local/share/tpm "/home/$USERNAME/.tmux/plugins/tpm"
     
-    # Set ownership of config directories
-    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config"
-    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config/nnn"
-    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config/nvim"
-    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.oh-my-zsh"
-    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.tmux"
+    # Set ownership of all home directory contents
+    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/"
     
     # Setup zsh history file with proper permissions
     touch "/home/$USERNAME/.zsh_history"

@@ -4,6 +4,9 @@
 # Workspace directory
 workspace/
 
+# home directory
+home/
+
 # SSH keys and configs (in case they get copied)
 .ssh/
 *.pem
